@@ -419,7 +419,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
         # show each demonstration that is part of this unit
         for subunit in unit:
             print("SUBUNIT  ",  subunit)
-            subunit[0].visualize_trajectory(subunit[1])
+            #subunit[0].visualize_trajectory(subunit[1])
             unit_constraints.extend(subunit[3])
 
             # update particle filter with demonstration's constraint
