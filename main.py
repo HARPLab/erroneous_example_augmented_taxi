@@ -474,7 +474,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
                 test_mdp.visualize_trajectory_comparison(opt_traj, human_traj)
 
-                print("Here is a remedial demonstration that might be helpful")
+                '''print("Here is a remedial demonstration that might be helpful")
 
                 remedial_instruction, visited_env_traj_idxs = BEC.obtain_remedial_demonstrations(data_loc, pool, particles, n_human_models, failed_BEC_constraint, min_subset_constraints_record, env_record, traj_record, traj_features_record, test_history, visited_env_traj_idxs, running_variable_filter, mdp_features_record, consistent_state_count, weights, step_cost_flag, n_human_models_precomputed=n_human_models_precomputed)
                 remedial_mdp, remedial_traj, _, remedial_constraint, _ = remedial_instruction[0]
@@ -537,7 +537,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
                         particles.update([-failed_BEC_constraint])
                         if visualize_pf_transition:
-                            BEC_viz.visualize_pf_transition([-failed_BEC_constraint], particles, mdp_class, weights)
+                            BEC_viz.visualize_pf_transition([-failed_BEC_constraint], particles, mdp_class, weights)'''
 
 
 def analyze_prev_study_tests(domain, BEC_summary, visited_env_traj_idxs, particles_summary, pool, prior, n_particles, n_human_models, n_human_models_precomputed, data_loc, weights, step_cost_flag, keys_map, visualize_pf_transition=True):
@@ -1054,7 +1054,7 @@ def run_scripts():
                             params.BEC['n_human_models'], params.BEC['n_particles'], params.prior, params.posterior, params.BEC['obj_func_proportion'], visited_env_traj_idxs=visited_env_traj_idxs)
 
     # c) run through the closed-loop teaching framework
-    # simulate_teaching_loop(params.mdp_class, BEC_summary, visited_env_traj_idxs, particles_summary, pool, params.prior, params.BEC['n_particles'], params.BEC['n_human_models'], params.BEC['n_human_models_precomputed'], params.data_loc['BEC'], params.weights['val'], params.step_cost_flag, params.keys_map, visualize_pf_transition=False)
+    simulate_teaching_loop(params.mdp_class, BEC_summary, visited_env_traj_idxs, particles_summary, pool, params.prior, params.BEC['n_particles'], params.BEC['n_human_models'], params.BEC['n_human_models_precomputed'], params.data_loc['BEC'], params.weights['val'], params.step_cost_flag, params.keys_map, visualize_pf_transition=False)
 
     # d) run remedial demonstration and test selection on previous participant responses from IROS
     # analyze_prev_study_tests(params.mdp_class, BEC_summary, visited_env_traj_idxs, particles_summary, pool, params.prior, params.BEC['n_particles'], params.BEC['n_human_models'], params.BEC['n_human_models_precomputed'], params.data_loc['BEC'], params.weights['val'], params.step_cost_flag, params.keys_map, visualize_pf_transition=False)
