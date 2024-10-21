@@ -418,6 +418,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
         # show each demonstration that is part of this unit
         for subunit in unit:
+            print("SUBUNIT  ",  subunit)
             subunit[0].visualize_trajectory(subunit[1])
             unit_constraints.extend(subunit[3])
 
@@ -441,11 +442,14 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
         # query the human's response to the diagnostic tests
         for test in preliminary_tests:
+            print("TEST ", test)
             test_mdp = test[0]
             opt_traj = test[1]
             test_constraints = test[3]
             test_history = [test] # to ensure that remedial demonstrations and tests are visually simple/similar and complex/different, respectively
 
+            print("Here is an erroneous example for this unit")
+            test_mdp.visualize_erroneous_example(opt_traj)
             print("Here is a diagnostic test for this unit")
             human_traj, human_history = test_mdp.visualize_interaction(keys_map=keys_map) # the latter is simply the gridworld locations of the agent
             # with open('models/' + data_loc + '/human_traj.pickle', 'wb') as f:
@@ -474,71 +478,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
                 test_mdp.visualize_trajectory_comparison(opt_traj, human_traj)
 
-                '''print("Here is a remedial demonstration that might be helpful")
-
-                remedial_instruction, visited_env_traj_idxs = BEC.obtain_remedial_demonstrations(data_loc, pool, particles, n_human_models, failed_BEC_constraint, min_subset_constraints_record, env_record, traj_record, traj_features_record, test_history, visited_env_traj_idxs, running_variable_filter, mdp_features_record, consistent_state_count, weights, step_cost_flag, n_human_models_precomputed=n_human_models_precomputed)
-                remedial_mdp, remedial_traj, _, remedial_constraint, _ = remedial_instruction[0]
-                remedial_mdp.visualize_trajectory(remedial_traj)
-                test_history.extend(remedial_instruction)
-
-                particles.update([remedial_constraint])
-                if visualize_pf_transition:
-                    BEC_viz.visualize_pf_transition([remedial_constraint], particles, mdp_class, weights)
-
-                with open('models/' + data_loc + '/remedial_instruction.pickle', 'wb') as f:
-                    pickle.dump(remedial_instruction, f)
-
-                remedial_test_correct = False
-
-                print("Here is a remedial test to see if you've correctly learned the lesson")
-                while not remedial_test_correct:
-
-                    remedial_test, visited_env_traj_idxs = BEC.obtain_remedial_demonstrations(data_loc, pool,
-                                                                                                     particles,
-                                                                                                     n_human_models,
-                                                                                                     failed_BEC_constraint,
-                                                                                                     min_subset_constraints_record,
-                                                                                                     env_record,
-                                                                                                     traj_record,
-                                                                                                     traj_features_record,
-                                                                                                     test_history,
-                                                                                                     visited_env_traj_idxs,
-                                                                                                     running_variable_filter,
-                                                                                                     mdp_features_record,
-                                                                                                     consistent_state_count,
-                                                                                                     weights,
-                                                                                                     step_cost_flag, type='testing', n_human_models_precomputed=n_human_models_precomputed)
-
-                    remedial_mdp, remedial_traj, _, _, _ = remedial_test[0]
-                    test_history.extend(remedial_test)
-
-                    human_traj, human_history = remedial_mdp.visualize_interaction(
-                        keys_map=keys_map)  # the latter is simply the gridworld locations of the agent
-                    # with open('models/' + data_loc + '/human_traj.pickle', 'wb') as f:
-                    #     pickle.dump((human_traj, human_history), f)
-                    # with open('models/' + data_loc + '/human_traj.pickle', 'rb') as f:
-                    #     human_traj, human_history = pickle.load(f)
-
-                    human_feature_count = remedial_mdp.accumulate_reward_features(human_traj, discount=True)
-                    opt_feature_count = remedial_mdp.accumulate_reward_features(remedial_traj, discount=True)
-
-                    if (human_feature_count == opt_feature_count).all():
-                        print("You got the remedial test correct")
-                        remedial_test_correct = True
-
-                        particles.update([failed_BEC_constraint])
-                        if visualize_pf_transition:
-                            BEC_viz.visualize_pf_transition([failed_BEC_constraint], particles, mdp_class, weights)
-                    else:
-                        failed_BEC_constraint = opt_feature_count - human_feature_count
-                        print("You got the remedial test wrong. Here's the correct answer")
-                        print("Failed BEC constraint: {}".format(failed_BEC_constraint))
-                        remedial_mdp.visualize_trajectory_comparison(remedial_traj, human_traj)
-
-                        particles.update([-failed_BEC_constraint])
-                        if visualize_pf_transition:
-                            BEC_viz.visualize_pf_transition([-failed_BEC_constraint], particles, mdp_class, weights)'''
-
+                
 
 def analyze_prev_study_tests(domain, BEC_summary, visited_env_traj_idxs, particles_summary, pool, prior, n_particles, n_human_models, n_human_models_precomputed, data_loc, weights, step_cost_flag, keys_map, visualize_pf_transition=True):
     with open('filtered_human_responses.pickle', 'rb') as f:

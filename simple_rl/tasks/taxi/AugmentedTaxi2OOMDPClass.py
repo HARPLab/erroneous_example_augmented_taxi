@@ -253,6 +253,13 @@ class AugmentedTaxi2OOMDP(OOMDP):
         trajectory = visualize_interaction(self, _draw_augmented_state, interaction_callback=interaction_callback, done_callback=done_callback, keys_map=keys_map, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2')
         return trajectory
 
+    def visualize_erroneous_example(self, erroneous_trajectory, marked_state_importances=None, width_scr_scale=180, height_scr_scale=180, counterfactual_traj=None):
+        from simple_rl.utils.mdp_visualizer import visualize_erroneous_example
+        from .taxi_visualizer import _draw_augmented_state
+
+        visualize_erroneous_example(self, erroneous_trajectory, _draw_augmented_state, marked_state_importances=marked_state_importances, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2', counterfactual_traj=counterfactual_traj)
+
+    
     # Visualize the value of each of the grid cells. --> Color corresponds to higher value.
     # (Currently not very helpful - see first comment in taxi_visualizer.py)
     def visualize_value(self, agent=None, width_scr_scale=180, height_scr_scale=180):

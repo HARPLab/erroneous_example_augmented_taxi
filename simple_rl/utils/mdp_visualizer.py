@@ -857,3 +857,59 @@ def convert_x_y_to_grid_cell(x, y, scr_width, scr_height, mdp_width, mdp_height)
     cell_x, cell_y = int(lower_left_x / cell_width) + 1, int(lower_left_y / cell_height) + 1
 
     return cell_x, cell_y
+
+def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, counterfactual_traj=None, delay=0.1):
+    trajectory = erroneous_trajectory
+    screen = pygame.display.set_mode((scr_width * 2 + 30, scr_height))
+
+    cur_state = trajectory[0][0]
+
+    # Setup and draw initial state.
+    dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state, counterfactual_traj=counterfactual_traj)
+    pygame.event.clear()
+    step = 0
+
+    if marked_state_importances is not None:
+        # indicate if this is the critical state by displaying its state importance value
+        if marked_state_importances[step] != float('-inf'):
+            _draw_lower_right_text('SI: {}'.format(round(marked_state_importances[step], 3)), screen)
+
+    while True and step != len(trajectory):
+
+        # Check for key presses.
+        for event in pygame.event.get():
+            if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                # Quit.
+                pygame.display.quit()
+                return
+            if event.type == KEYDOWN and event.key == K_SPACE:
+                # clear the old shapes
+                for shape in dynamic_shapes:
+                    pygame.draw.rect(screen, (255,255,255), shape)
+
+                action = trajectory[step][1]
+                cur_state = trajectory[step][2]
+
+                if marked_state_importances is not None:
+                    # indicate if this is the critical state by displaying its state importance value
+                    if marked_state_importances[step] != float('-inf'):
+                        _draw_lower_right_text('SI: {}'.format(round(marked_state_importances[step], 3)), screen)
+                    else:
+                        # clear the text
+                        _draw_lower_right_text('       ', screen)
+
+                dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, agent_history=agent_history, counterfactual_traj=counterfactual_traj)
+                # print("A: " + str(action))
+
+                # Update state text.
+                _draw_lower_left_text(cur_state, screen)
+
+                step += 1
+
+        pygame.display.flip()
+
+        time.sleep(delay)
+
+    if cur_state.is_terminal():
+        goal_text_rendered, goal_text_point = _draw_terminal_text(mdp_class, cur_state, scr_width, scr_height, title_font)
+        screen.blit(goal_text_rendered, goal_text_point)

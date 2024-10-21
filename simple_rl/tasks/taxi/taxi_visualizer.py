@@ -236,21 +236,7 @@ def _draw_augmented_state(screen,
                         top_left_point[1] + cell_height / 3.0)
                     screen.blit(value_text, text_center_point)
 
-                    # Draw the value depending on the status of the passenger (incomplete)
-                    # val_1 = val_text_dict[s.get_agent_x()][s.get_agent_y()][0]  # passenger not in taxi
-                    # val_2 = val_text_dict[s.get_agent_x()][s.get_agent_y()][1]  # passenger not in taxi
-                    # color = mdpv.val_to_color((val_1 + val_2) / 2.)
-                    # pygame.draw.rect(screen, color, top_left_point + (cell_width, cell_height), 0)
-                    #
-                    # value_text = reg_font.render(str(round(val_1, 2)), True, (46, 49, 49))
-                    # text_center_point = int(top_left_point[0] + cell_width / 2.0 - 10), int(
-                    #     top_left_point[1] + cell_height / 1.5)
-                    # screen.blit(value_text, text_center_point)
-                    #
-                    # value_text = reg_font.render(str(round(val_2, 2)), True, (46, 49, 49))
-                    # text_center_point = int(top_left_point[0] + cell_width / 2.0 - 10), int(
-                    #     top_left_point[1] + cell_height / 4.5)
-                    # screen.blit(value_text, text_center_point)
+                    
 
                 # Show optimal action to take in each grid cell.
                 if policy and not taxi_helpers.is_wall(taxi_oomdp, i + 1, taxi_oomdp.height - j):
