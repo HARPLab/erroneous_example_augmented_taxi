@@ -858,14 +858,15 @@ def convert_x_y_to_grid_cell(x, y, scr_width, scr_height, mdp_width, mdp_height)
 
     return cell_x, cell_y
 
-def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, counterfactual_traj=None, delay=0.1, interaction_callback=None, done_callback=None, keys_map=None):
+def visualize_erroneous_example(mdp, erroneous_trajectory, draw_erroneous_state, draw_test_state, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, counterfactual_traj=None, delay=0.1, interaction_callback=None, done_callback=None, keys_map=None):
+    
     trajectory = erroneous_trajectory
     screen = pygame.display.set_mode((scr_width * 2 + 30, scr_height))
 
     cur_state = trajectory[0][0]
 
     # Setup and draw initial state.
-    dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state, counterfactual_traj=counterfactual_traj)
+    dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_erroneous_state, cur_state, counterfactual_traj=counterfactual_traj)
     pygame.event.clear()
     step = 0
 
@@ -898,7 +899,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
                         # clear the text
                         _draw_lower_right_text('       ', screen)
 
-                dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, agent_history=agent_history, counterfactual_traj=counterfactual_traj)
+                dynamic_shapes, agent_history = draw_erroneous_state(screen, mdp, cur_state, agent_history=agent_history, counterfactual_traj=counterfactual_traj)
                 # print("A: " + str(action))
 
                 # Update state text.
@@ -914,14 +915,16 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
         goal_text_rendered, goal_text_point = _draw_terminal_text(mdp_class, cur_state, scr_width, scr_height, title_font)
         screen.blit(goal_text_rendered, goal_text_point)
 
-    pygame.display.flip()
+    #pygame.display.flip()
 
     # above is erroneous example
     # below is test template
 
+    cur_state = None
+
     gamma = mdp.gamma
     actions = mdp.get_actions()
-    mdp, cur_state, dynamic_shapes, agent_history, cumulative_reward, step = interaction_reset(mdp, cur_state, screen, draw_state)
+    mdp, cur_state, dynamic_shapes, agent_history, cumulative_reward, step = interaction_reset(mdp, cur_state, screen, draw_test_state)
 
     if keys_map is None:
         keys = [K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]
@@ -936,7 +939,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
 
     done = False
     while not done:
-
+        print("not done")
         # Check for key presses.
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
@@ -946,7 +949,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
             if event.type == KEYDOWN and event.key in keys:
                 if event.key == eval('K_r'):
                     # 'r' == reset
-                    mdp, cur_state, dynamic_shapes, agent_history, cumulative_reward, step = interaction_reset(mdp, None, screen, draw_state)
+                    mdp, cur_state, dynamic_shapes, agent_history, cumulative_reward, step = interaction_reset(mdp, None, screen, draw_test_state)
                     current_reward = 0
                     trajectory = []
                     continue
@@ -962,7 +965,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
                         cur_state = prev_sequence[0]
                         mdp.set_curr_state(cur_state)
                         cumulative_reward -= current_reward
-                        dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, agent_history=agent_history)
+                        dynamic_shapes, agent_history = draw_test_state(screen, mdp, cur_state, agent_history=agent_history)
                         continue
                     else:
                         continue
@@ -975,7 +978,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
                 action = actions[keys.index(event.key)]
                 reward, cur_state = mdp.execute_agent_action(action=action)
 
-                dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, agent_history=agent_history)
+                dynamic_shapes, agent_history = draw_test_state(screen, mdp, cur_state, agent_history=agent_history)
                 # Update state text.
                 _draw_lower_left_text(cur_state, screen)
 
@@ -991,6 +994,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state, marked_st
 
                     step += 1
         if cur_state.is_terminal():
+            print("terminal")
             goal_text_rendered, goal_text_point = _draw_terminal_text(mdp_class, cur_state, scr_width, scr_height, title_font)
             screen.blit(goal_text_rendered, goal_text_point)
             done = True
