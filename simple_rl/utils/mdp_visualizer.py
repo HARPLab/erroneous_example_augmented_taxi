@@ -833,7 +833,7 @@ def _vis_init(screen, mdp, draw_state, cur_state, agent=None, value=False, score
     else:
         _draw_lower_left_text(cur_state, screen)
 
-    dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, agent=agent, draw_statics=True, agent_history=[], counterfactual_traj=counterfactual_traj, offset_direction=offset_direction, alpha=alpha)
+    dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state, cur_state, agent=agent, draw_statics=True, agent_history=[], counterfactual_traj=counterfactual_traj, offset_direction=offset_direction, alpha=alpha)
 
     return dynamic_shapes, agent_history
 
@@ -899,7 +899,7 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_erroneous_state,
                         # clear the text
                         _draw_lower_right_text('       ', screen)
 
-                dynamic_shapes, agent_history = draw_erroneous_state(screen, mdp, cur_state, agent_history=agent_history, counterfactual_traj=counterfactual_traj)
+                dynamic_shapes, agent_history = draw_erroneous_state(screen, mdp, trajectory[0][0], cur_state, agent_history=agent_history, counterfactual_traj=counterfactual_traj)
                 # print("A: " + str(action))
 
                 # Update state text.

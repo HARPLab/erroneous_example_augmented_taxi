@@ -440,6 +440,7 @@ def _draw_agent(center_point, screen, base_size=30, alpha=255):
 
 def _draw_erroneous_state(screen,
                 taxi_oomdp,
+                start_state,
                 state,
                 policy=None,
                 action_char_dict={},
@@ -672,7 +673,127 @@ def _draw_erroneous_state(screen,
                     text_rendered_a = cc_font.render(text_a, True, (46, 49, 49))
                     screen.blit(text_rendered_a, text_center_point)
 
-                  
+    #draw template of test to the side          
+    objects = start_state.get_objects()
+    agent_x, agent_y = objects["agent"][0]["x"], objects["agent"][0]["y"]
+
+    # Statics
+    if draw_statics:
+        # Draw walls.
+        for w in taxi_oomdp.walls:
+            w_x, w_y = w["x"], w["y"]
+            top_left_point = width_buffer + cell_width * (w_x - 1) + 5 + scr_width, height_buffer + cell_height * (
+                    taxi_oomdp.height - w_y) + 5
+            pygame.draw.rect(screen, (46, 49, 49), top_left_point + (cell_width - 10, cell_height - 10), 0)
+
+        # Draw tolls.
+        for t in taxi_oomdp.tolls:
+            t_x, t_y = t["x"], t["y"]
+            top_left_point = width_buffer + cell_width * (t_x - 1) + 5 + scr_width, height_buffer + cell_height * (
+                    taxi_oomdp.height - t_y) + 5
+            # Clear the space and redraw with correct transparency (instead of simply adding a new layer which would
+            # affect the transparency
+            pygame.draw.rect(screen, (255, 255, 255), top_left_point + (cell_width - 10, cell_height - 10), 0)
+            pygame.gfxdraw.box(screen, top_left_point + (cell_width - 10, cell_height - 10), (224, 230, 67))
+
+        # Draw traffic cells.
+        for t in taxi_oomdp.traffic_cells:
+            t_x, t_y = t["x"], t["y"]
+            top_left_point = width_buffer + cell_width * (t_x - 1) + 5 + scr_width, height_buffer + cell_height * (
+                    taxi_oomdp.height - t_y) + 5
+            # Clear the space and redraw with correct transparency (instead of simply adding a new layer which would
+            # affect the transparency
+            pygame.draw.rect(screen, (255, 255, 255), top_left_point + (cell_width - 10, cell_height - 10), 0)
+            pygame.gfxdraw.box(screen, top_left_point + (cell_width - 10, cell_height - 10), (58, 28, 232))
+
+        # Draw fuel stations.
+        for f in taxi_oomdp.fuel_stations:
+            f_x, f_y = f["x"], f["y"]
+            top_left_point = width_buffer + cell_width * (f_x - 1) + 5 + scr_width, height_buffer + cell_height * (
+                    taxi_oomdp.height - f_y) + 5
+            pygame.draw.rect(screen, (144, 0, 255), top_left_point + (cell_width - 10, cell_height - 10), 0)
+
+        # Draw the destination.
+        for i, p in enumerate(objects["passenger"]):
+            # Dest.
+            dest_x, dest_y = p["dest_x"], p["dest_y"]
+            top_left_point = int(width_buffer + cell_width*(dest_x - 1) + 27)  + scr_width, int(height_buffer + cell_height*(taxi_oomdp.height - dest_y) + 14)
+            dest_col = (int(max(color_ls[-i-1][0]-30, 0)), int(max(color_ls[-i-1][1]-30, 0)), int(max(color_ls[-i-1][2]-30, 0)))
+            pygame.draw.rect(screen, dest_col, top_left_point + (cell_width / 6, cell_height / 6), 0)
+
+    # Draw hotswap stations.
+    if "hotswap_station" in objects.keys():
+        for f in objects["hotswap_station"]:
+            x, y = f["x"], f["y"]
+            top_left_point = int(width_buffer + cell_width * (x - 1) + 70 + offset_counterfactual  + scr_width), int(
+                height_buffer + cell_height * (taxi_oomdp.height - y) + 65)
+            dest_col = (
+            int(max(color_ls[0][0] - 30, 0)), int(max(color_ls[0][1] - 30, 0)), int(max(color_ls[0][2] - 30, 0)), alpha)
+
+            n, r = 6, cell_width / 8
+            x, y = top_left_point[0], top_left_point[1]
+            color = dest_col
+            hotswap_station_shape = mdpv._draw_polygon_alpha(screen, color, [
+                (x + r * math.cos(2 * math.pi * i / n), y + r * math.sin(2 * math.pi * i / n))
+                for i in range(n)
+            ])
+
+
+    # Draw new agent.
+    top_left_point = width_buffer + cell_width * (agent_x - 1) + scr_width, height_buffer + cell_height * (
+                taxi_oomdp.height - agent_y)
+    agent_center = int(top_left_point[0] + cell_width / 2.0 + offset_counterfactual), int(top_left_point[1] + cell_height / 2.0)
+    agent_shape = _draw_agent(agent_center, screen, base_size=min(cell_width, cell_height) / 2.5 - 4, alpha=alpha)
+
+
+    # Draw the passengers.
+    for i, p in enumerate(objects["passenger"]):
+        # Passenger
+        pass_x, pass_y = p["x"], p["y"]
+        taxi_size = int(min(cell_width, cell_height) / 9.0)
+        if p["in_taxi"]:
+            top_left_point = int(width_buffer + cell_width * (pass_x - 1) + taxi_size + 58 + offset_counterfactual + scr_width), int(
+                height_buffer + cell_height * (taxi_oomdp.height - pass_y) + taxi_size + 16)
+        else:
+            top_left_point = int(width_buffer + cell_width * (pass_x - 1) + taxi_size + 26 + offset_counterfactual + scr_width), int(
+                height_buffer + cell_height * (taxi_oomdp.height - pass_y) + taxi_size + 38)
+        dest_col = (max(color_ls[-i-1][0]-30, 0), max(color_ls[-i-1][1]-30, 0), max(color_ls[-i-1][2]-30, 0), alpha)
+        passenger_shape = mdpv._draw_circle_alpha(screen, dest_col, top_left_point, taxi_size)
+
+
+    if draw_statics:
+        # For each row:
+        for i in range(taxi_oomdp.width):
+            # For each column:
+            for j in range(taxi_oomdp.height):
+                top_left_point = width_buffer + cell_width*i + scr_width, height_buffer + cell_height*j
+                r = pygame.draw.rect(screen, (46, 49, 49), top_left_point + (cell_width, cell_height), 3)
+
+                # Show value of states.
+                if show_value and not taxi_helpers.is_wall(taxi_oomdp, i + 1, taxi_oomdp.height - j):
+                    # Draw the value.
+                    val = val_text_dict[i + 1][taxi_oomdp.height - j]
+                    color = mdpv.val_to_color(val)
+                    pygame.draw.rect(screen, color, top_left_point + (cell_width, cell_height), 0)
+                    value_text = reg_font.render(str(round(val, 2)), True, (46, 49, 49))
+                    text_center_point = int(top_left_point[0] + cell_width / 2.0 - 10), int(
+                        top_left_point[1] + cell_height / 3.0)
+                    screen.blit(value_text, text_center_point)
+
+                    
+
+                # Show optimal action to take in each grid cell.
+                if policy and not taxi_helpers.is_wall(taxi_oomdp, i + 1, taxi_oomdp.height - j):
+                    a = policy_dict[i+1][taxi_oomdp.height - j]
+                    if a not in action_char_dict:
+                        text_a = a
+                    else:
+                        text_a = action_char_dict[a]
+                    text_center_point = int(top_left_point[0] + cell_width/2.0 - 10), int(top_left_point[1] + cell_height/3.0)
+                    text_rendered_a = cc_font.render(text_a, True, (46, 49, 49))
+                    screen.blit(text_rendered_a, text_center_point)
+
+
 
     pygame.display.flip()
 
