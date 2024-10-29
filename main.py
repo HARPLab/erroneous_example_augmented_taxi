@@ -449,9 +449,9 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
             test_history = [test] # to ensure that remedial demonstrations and tests are visually simple/similar and complex/different, respectively
 
             print("Here is an erroneous example for this unit")
-            test_mdp.visualize_erroneous_example(opt_traj, keys_map=keys_map)
-            print("Here is a diagnostic test for this unit")
-            human_traj, human_history = test_mdp.visualize_interaction(keys_map=keys_map) # the latter is simply the gridworld locations of the agent
+            human_traj, human_history = test_mdp.visualize_erroneous_example(opt_traj, keys_map=keys_map)
+            #print("Here is a diagnostic test for this unit")
+            #human_traj, human_history = test_mdp.visualize_interaction(keys_map=keys_map) # the latter is simply the gridworld locations of the agent
             # with open('models/' + data_loc + '/human_traj.pickle', 'wb') as f:
             #     pickle.dump((human_traj, human_history), f)
             # with open('models/' + data_loc + '/human_traj.pickle', 'rb') as f:
