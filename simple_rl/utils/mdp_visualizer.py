@@ -711,7 +711,8 @@ def interaction_reset(mdp, cur_state, screen, draw_state, is_erroneous_test = Fa
     cur_state = mdp.get_init_state() if cur_state is None else cur_state
     mdp.set_curr_state(cur_state)
     if is_erroneous_test:
-        dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state, err_dynamic_shapes, err_agent_history, final_state, is_erroneous_test = True)
+        print("reset ", err_dynamic_shapes, err_agent_history, final_state)
+        dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state, err_dynamic_shapes=err_dynamic_shapes, err_agent_history=err_agent_history, final_state=final_state, is_erroneous_test = True)
     else:
         dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state)
     pygame.event.clear()
@@ -931,11 +932,11 @@ def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state_1, draw_st
 
     err_dynamic_shapes = copy.deepcopy(dynamic_shapes)
     err_agent_history = copy.deepcopy(agent_history)
-    print(dynamic_shapes)
-    print(agent_history)
 
     gamma = mdp.gamma
     actions = mdp.get_actions()
+    print(err_dynamic_shapes)
+    print(err_agent_history)
     mdp, cur_state, dynamic_shapes, agent_history, cumulative_reward, step = interaction_reset(mdp, start_state, screen, draw_state_2, is_erroneous_test=True, err_dynamic_shapes=err_dynamic_shapes, err_agent_history=err_agent_history, final_state=final_state)
 
     print("agent history ", agent_history)

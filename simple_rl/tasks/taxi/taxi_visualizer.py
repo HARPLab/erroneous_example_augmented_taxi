@@ -853,6 +853,7 @@ def _draw_test_state(screen,
     # investing a lot of time into making the pipeline customizable and robust. Leaving incomplete attempt below as
     # commented out code.
     print("DRAW TEST STATE")
+    print(err_dynamic_shapes, err_agent_history, final_state)
 
     # Make value dict.
     val_text_dict = defaultdict(lambda: defaultdict(float))
@@ -1060,8 +1061,11 @@ def _draw_test_state(screen,
 
     dynamic_shapes_list.append(agent_shape)
 
+    print("NOW")
+    print(err_agent_history, err_dynamic_shapes, final_state)
     # SHOW ERRONEOUS EXAMPLE
     if final_state != None:
+        print("THERE")
         objects = final_state.get_objects()
         agent_x, agent_y = objects["agent"][0]["x"], objects["agent"][0]["y"]
 
