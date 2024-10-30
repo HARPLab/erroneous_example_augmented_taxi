@@ -598,10 +598,19 @@ def _draw_erroneous_state(screen,
                 top_left_point_rect = int(width_buffer + cell_width * (position[0] - 0.5) - cell_width/8), int(
                     height_buffer + cell_height * (taxi_oomdp.height - position[1] + 0.5) - 2)
                 pygame.draw.rect(screen, (103, 115, 135), top_left_point_rect + (cell_width / 4, cell_height / 20), 0)
+
+                prev_top_left = top_left_point
             else:
                 top_left_point = int(width_buffer + cell_width * (position[0] - 0.5)), int(
                     height_buffer + cell_height * (taxi_oomdp.height - position[1] + 0.5))
                 pygame.draw.circle(screen, (103, 115, 135), top_left_point, int(min(cell_width, cell_height) / 15))
+
+                # code for arrow from here: https://stackoverflow.com/questions/43527894/drawing-arrowheads-which-follow-the-direction-of-the-line-in-pygame
+                pygame.draw.line(screen,(255, 0, 0),(prev_top_left),(top_left_point),5)
+                rotation = math.degrees(math.atan2(prev_top_left[1]-top_left_point[1], top_left_point[0]-prev_top_left[0]))+90
+                pygame.draw.polygon(screen, (255, 0, 0), ((top_left_point[0]+15*math.sin(math.radians(rotation)), top_left_point[1]+15*math.cos(math.radians(rotation))), (top_left_point[0]+15*math.sin(math.radians(rotation-120)), top_left_point[1]+15*math.cos(math.radians(rotation-120))), (top_left_point[0]+15*math.sin(math.radians(rotation+120)), top_left_point[1]+15*math.cos(math.radians(rotation+120)))))
+                #draw_arrow(screen, (103, 115, 135), agent_history[i - 1], position)
+                prev_top_left = top_left_point
 
     # Draw history of past counterfactual agent locations if applicable
     if counterfactual_traj is not None:
@@ -1212,3 +1221,8 @@ def _draw_test_state(screen,
 
 
     return dynamic_shapes_list, agent_history
+
+def draw_arrow(screen, color, start, end):
+    pygame.draw.line(screen,color,start,end,2)
+    rotation = math.degrees(math.atan2(start[1]-end[1], end[0]-start[0]))+90
+    pygame.draw.polygon(screen, (255, 0, 0), ((end[0]+20*math.sin(math.radians(rotation)), end[1]+20*math.cos(math.radians(rotation))), (end[0]+20*math.sin(math.radians(rotation-120)), end[1]+20*math.cos(math.radians(rotation-120))), (end[0]+20*math.sin(math.radians(rotation+120)), end[1]+20*math.cos(math.radians(rotation+120)))))
