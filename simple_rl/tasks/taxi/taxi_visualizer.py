@@ -1382,7 +1382,7 @@ def _draw_test_comp_state(screen,
                     height_buffer + cell_height * (taxi_oomdp.height - position[1] + 0.5))
                 pygame.draw.circle(screen, (103, 115, 135), top_left_point, int(min(cell_width, cell_height) / 15))
 
-                if isCorrect:
+                '''if isCorrect:
                     color = (255, 0, 0)
                 else:
                     color = (0, 255, 0)
@@ -1392,7 +1392,7 @@ def _draw_test_comp_state(screen,
                     rotation = math.degrees(math.atan2(prev_top_left[1]-top_left_point[1], top_left_point[0]-prev_top_left[0]))+90
                     pygame.draw.polygon(screen, color, ((top_left_point[0]+15*math.sin(math.radians(rotation)), top_left_point[1]+15*math.cos(math.radians(rotation))), (top_left_point[0]+15*math.sin(math.radians(rotation-120)), top_left_point[1]+15*math.cos(math.radians(rotation-120))), (top_left_point[0]+15*math.sin(math.radians(rotation+120)), top_left_point[1]+15*math.cos(math.radians(rotation+120)))))
                     
-                prev_top_left = top_left_point
+                prev_top_left = top_left_point'''
 
     # Draw history of past counterfactual agent locations if applicable
     if counterfactual_traj is not None:
