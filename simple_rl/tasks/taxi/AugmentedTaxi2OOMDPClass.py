@@ -301,8 +301,9 @@ class AugmentedTaxi2OOMDP(OOMDP):
         # for moving through two trajectories simultaneously
         from simple_rl.utils.mdp_visualizer import visualize_trajectory_comparison
         from .taxi_visualizer import _draw_augmented_state
+        from .taxi_visualizer import _draw_test_comp_state
 
-        visualize_trajectory_comparison(self, trajectory, trajectory_counterfactual, _draw_augmented_state, marked_state_importances=marked_state_importances, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2')
+        visualize_trajectory_comparison(self, trajectory, trajectory_counterfactual, _draw_augmented_state, _draw_test_comp_state, marked_state_importances=marked_state_importances, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2')
 
     # ----------------------------
     # -- Action Implementations --

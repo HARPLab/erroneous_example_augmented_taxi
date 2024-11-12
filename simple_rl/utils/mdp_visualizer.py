@@ -494,7 +494,7 @@ def visualize_trajectory(mdp, trajectory, draw_state, marked_state_importances=N
         time.sleep(delay)
 
 
-def visualize_trajectory_comparison(mdp, trajectory, trajectory_counterfactual, draw_state, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, delay=0.1):
+def visualize_trajectory_comparison(mdp, trajectory, trajectory_counterfactual, draw_state1, draw_state2, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, delay=0.1):
     '''
     Args:
         mdp (MDP)
@@ -514,8 +514,8 @@ def visualize_trajectory_comparison(mdp, trajectory, trajectory_counterfactual, 
     cur_state_counter = trajectory_counterfactual[0][0]
 
     # Setup and draw initial state.
-    dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state, cur_state_traj, offset_direction=1)
-    dynamic_shapes_counterfactual, agent_history_counterfactual = draw_state(screen, mdp, cur_state_counter,
+    dynamic_shapes, agent_history = _vis_init(screen, mdp, draw_state1, cur_state_traj, offset_direction=1)
+    dynamic_shapes_counterfactual, agent_history_counterfactual = draw_state2(screen, mdp, cur_state_counter, False,
                                                                              draw_statics=False, agent_history=[],
                                                                              offset_direction=-1, alpha=150)
 
@@ -596,17 +596,25 @@ def visualize_trajectory_comparison(mdp, trajectory, trajectory_counterfactual, 
                         cur_anchor_point = anchor_points_wait.pop()
 
                 # print(cur_state_traj, cur_state_counter)
-                dynamic_shapes, agent_history = draw_state(screen, mdp, cur_state_traj,
-                                                           agent_history=agent_history, offset_direction=1,
-                                                           visualize_history=False)
-
-                dynamic_shapes_counterfactual, agent_history_counterfactual = draw_state(screen, mdp,
-                                                                                         cur_state_counter,
+                dynamic_shapes_counterfactual, agent_history_counterfactual = draw_state2(screen, mdp,
+                                                                                         cur_state_counter, True,
                                                                                          agent_history=agent_history_counterfactual,
                                                                                          draw_statics=False,
                                                                                          offset_direction=-1,
                                                                                          alpha=150,
-                                                                                         visualize_history=False)
+                                                                                         visualize_history=True)
+
+                dynamic_shapes, agent_history = draw_state2(screen, mdp, cur_state_traj,False,
+                                                           agent_history=agent_history, offset_direction=1,
+                                                           visualize_history=True)
+
+                '''dynamic_shapes_counterfactual, agent_history_counterfactual = draw_state2(screen, mdp,
+                                                                                         cur_state_counter, True,
+                                                                                         agent_history=agent_history_counterfactual,
+                                                                                         draw_statics=False,
+                                                                                         offset_direction=-1,
+                                                                                         alpha=150,
+                                                                                         visualize_history=True)'''
 
                 step_traj += 1
                 step_counter += 1
