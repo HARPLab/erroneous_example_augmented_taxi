@@ -17,6 +17,7 @@ import itertools
 from collections import defaultdict
 from multiprocessing import Process, Queue, Pool
 import difflib
+import json
 
 # Other imports.
 sys.path.append("simple_rl")
@@ -410,16 +411,13 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
     particles = pf.Particles(particle_positions)
     particles.update(prior)
 
-    # run through the pre-selected units
     for unit_idx, unit in enumerate(BEC_summary):
-        print("Here are the demonstrations for this unit")
         unit_constraints = []
         running_variable_filter = unit[0][4]
 
         # show each demonstration that is part of this unit
         for subunit in unit:
-            print("SUBUNIT  ",  subunit)
-            #subunit[0].visualize_trajectory(subunit[1])
+            subunit[0].visualize_trajectory(subunit[1])
             unit_constraints.extend(subunit[3])
 
             # update particle filter with demonstration's constraint
@@ -433,7 +431,6 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
         random.shuffle(min_constraints) # shuffle the order of the constraints so that it's not always the same
         # obtain the diagnostic tests that will test the human's understanding of the unit's constraints
         preliminary_tests, visited_env_traj_idxs = BEC.obtain_diagnostic_tests(data_loc, unit, visited_env_traj_idxs, min_constraints, min_subset_constraints_record, traj_record, traj_features_record, running_variable_filter, mdp_features_record)
-        print(preliminary_tests[0])
 
         # with open('models/' + data_loc + '/preliminary_tests.pickle', 'wb') as f:
         #     pickle.dump((preliminary_tests, visited_env_traj_idxs), f)
@@ -441,14 +438,16 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
         #     preliminary_tests, visited_env_traj_idxs = pickle.load(f)
 
         # query the human's response to the diagnostic tests
+        count = 0
         for test in preliminary_tests:
-            print("TEST ", test)
             test_mdp = test[0]
+            count += 1
             opt_traj = test[1]
             test_constraints = test[3]
             test_history = [test] # to ensure that remedial demonstrations and tests are visually simple/similar and complex/different, respectively
 
             print("Here is an erroneous example for this unit")
+            print(opt_traj)
             human_traj, human_history = test_mdp.visualize_erroneous_example(opt_traj, keys_map=keys_map)
             #print("Here is a diagnostic test for this unit")
             #human_traj, human_history = test_mdp.visualize_interaction(keys_map=keys_map) # the latter is simply the gridworld locations of the agent
