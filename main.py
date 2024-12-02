@@ -417,7 +417,7 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
         # show each demonstration that is part of this unit
         for subunit in unit:
-            subunit[0].visualize_trajectory(subunit[1])
+            #subunit[0].visualize_trajectory(subunit[1])
             unit_constraints.extend(subunit[3])
 
             # update particle filter with demonstration's constraint
@@ -442,13 +442,14 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
         for test in preliminary_tests:
             test_mdp = test[0]
             count += 1
-            opt_mdp_params = test[1]
+            opt_traj = test[1]
             test_constraints = test[3]
             test_history = [test] # to ensure that remedial demonstrations and tests are visually simple/similar and complex/different, respectively
 
             if err_ex:
                 print("Here is an erroneous example for this unit")
-                human_traj, human_history = test_mdp.visualize_erroneous_example(opt_mdp_params, keys_map=keys_map)
+                erroneous_mdp_params = {'agent': {'x': 3, 'y': 1, 'has_passenger': 0}, 'walls': [{'x': 1, 'y': 3}, {'x': 1, 'y': 2}], 'passengers': [{'x': 2, 'y': 3, 'dest_x': 1, 'dest_y': 1, 'in_taxi': 0}], 'tolls': [{'x': 2, 'y': 2}, {'x': 3, 'y': 2}], 'available_tolls': [{'x': 3, 'y': 3}, {'x': 2, 'y': 2}, {'x': 3, 'y': 2}, {'x': 4, 'y': 2}, {'x': 3, 'y': 1}], 'traffic': [], 'fuel_station': [], 'hotswap_station': [], 'available_hotswap_stations': [{'x': 4, 'y': 3}], 'width': 4, 'height': 3, 'gamma': 1, 'env_code': [0, 1, 1, 0, 0, 0], 'opt_locations': [[3, 1, 0], [4, 1, 0], [4, 2, 0], [4, 3, 0], [3, 3, 0], [2, 3, 0], [2, 3, 1], [2, 2, 1], [2, 1, 1], [1, 1, 1], [1, 1, 0]], 'opt_actions': ['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'opt_traj_length': 10, 'opt_traj_reward': -2.7559944880165363, 'test_difficulty': 'none', 'tag': -3, 'all_opt_actions': [['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff']], 'normalized_opt_actions': [], 'normalized_human_actions': [], 'human_actions': ['up', 'up', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'env_traj_idxs': [24, 99], 'variable_filter': [[0, 1, 0]], 'constraints': [[[1, 0, -4]], [[-1, 0, 2]]]}
+                human_traj, human_history = test_mdp.visualize_erroneous_example(erroneous_mdp_params, keys_map=keys_map)
             else:
                 print("Here is a diagnostic test for this unit")
                 human_traj, human_history = test_mdp.visualize_interaction(keys_map=keys_map) # the latter is simply the gridworld locations of the agent

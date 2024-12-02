@@ -253,11 +253,28 @@ class AugmentedTaxi2OOMDP(OOMDP):
         trajectory = visualize_interaction(self, _draw_augmented_state, interaction_callback=interaction_callback, done_callback=done_callback, keys_map=keys_map, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2')
         return trajectory
 
-    def visualize_erroneous_example(self, erroneous_trajectory, marked_state_importances=None, width_scr_scale=180, height_scr_scale=180, counterfactual_traj=None, interaction_callback=None, done_callback=None, keys_map=None):
+    def visualize_erroneous_example(self, erroneous_mdp_params, marked_state_importances=None, width_scr_scale=180, height_scr_scale=180, counterfactual_traj=None, interaction_callback=None, done_callback=None, keys_map=None):
         from simple_rl.utils.mdp_visualizer import visualize_erroneous_example
         from .taxi_visualizer import _draw_erroneous_state, _draw_test_state
 
-        
+        #{'agent': {'x': 3, 'y': 1, 'has_passenger': 0}, 'walls': [{'x': 1, 'y': 3}, {'x': 1, 'y': 2}], 'passengers': [{'x': 2, 'y': 3, 'dest_x': 1, 'dest_y': 1, 'in_taxi': 0}], 'tolls': [{'x': 2, 'y': 2}, {'x': 3, 'y': 2}], 'available_tolls': [{'x': 3, 'y': 3}, {'x': 2, 'y': 2}, {'x': 3, 'y': 2}, {'x': 4, 'y': 2}, {'x': 3, 'y': 1}], 'traffic': [], 'fuel_station': [], 'hotswap_station': [], 'available_hotswap_stations': [{'x': 4, 'y': 3}], 'width': 4, 'height': 3, 'gamma': 1, 'env_code': [0, 1, 1, 0, 0, 0], 'opt_locations': [[3, 1, 0], [4, 1, 0], [4, 2, 0], [4, 3, 0], [3, 3, 0], [2, 3, 0], [2, 3, 1], [2, 2, 1], [2, 1, 1], [1, 1, 1], [1, 1, 0]], 'opt_actions': ['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'opt_traj_length': 10, 'opt_traj_reward': -2.7559944880165363, 'test_difficulty': 'none', 'tag': -3, 'all_opt_actions': [['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff']], 'normalized_opt_actions': [], 'normalized_human_actions': [], 'human_actions': ['up', 'up', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'env_traj_idxs': [24, 99], 'variable_filter': [[0, 1, 0]], 'constraints': [[[1, 0, -4]], [[-1, 0, 2]]]}
+        num_actions = len(erroneous_mdp_params['human_actions'])
+
+        agent_obj = OOMDPObject(attributes=erroneous_mdp_params['agent'], name="agent")
+        pass_obj = self._make_oomdp_objs_from_list_of_dict(erroneous_mdp_params['passengers'], "passenger")
+        hotswap_obj = self._make_oomdp_objs_from_list_of_dict(erroneous_mdp_params['hotswap_station'], "hotswap_station")
+        init_state = self._create_state(agent_obj, pass_obj, hotswap_obj)
+        erroneous_actions = erroneous_mdp_params['human_actions']
+        second_state = self._taxi_transition_func(init_state, erroneous_actions[0])
+
+        erroneous_trajectory = [(init_state, erroneous_actions[0], second_state)]
+
+        for i in range(1, num_actions):
+            prev_state = erroneous_trajectory[-1][2]
+            action = erroneous_actions[i]
+            next_state = self._taxi_transition_func(prev_state, action)
+
+            erroneous_trajectory.append((prev_state, action, next_state))
 
         trajectory, agent_history = visualize_erroneous_example(self, erroneous_trajectory, _draw_erroneous_state, _draw_test_state, marked_state_importances=marked_state_importances, scr_width=self.width*width_scr_scale, scr_height=self.height*height_scr_scale, mdp_class='augmented_taxi2', counterfactual_traj=counterfactual_traj, interaction_callback=interaction_callback, done_callback=done_callback, keys_map=keys_map)
         return trajectory, agent_history
