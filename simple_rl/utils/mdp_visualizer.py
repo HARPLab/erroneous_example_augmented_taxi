@@ -867,6 +867,7 @@ def convert_x_y_to_grid_cell(x, y, scr_width, scr_height, mdp_width, mdp_height)
     return cell_x, cell_y
 
 def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state_1, draw_state_2, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, counterfactual_traj=None, delay=0.1, interaction_callback=None, done_callback=None, keys_map=None):
+    
     trajectory = erroneous_trajectory
     screen = pygame.display.set_mode((scr_width * 2 + 30, scr_height))
 
