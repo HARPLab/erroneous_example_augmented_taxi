@@ -469,6 +469,7 @@ def _draw_erroneous_state(screen,
     # investing a lot of time into making the pipeline customizable and robust. Leaving incomplete attempt below as
     # commented out code.
 
+
     # Make value dict.
     val_text_dict = defaultdict(lambda: defaultdict(float))
     # val_text_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
