@@ -406,8 +406,9 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
         policy_constraints, min_subset_constraints_record, env_record, traj_record, traj_features_record, reward_record, mdp_features_record, consistent_state_count = pickle.load(
             f)
 
-    with open('erroneous_example_augmented_taxi/augmented_taxi_err_ex.json', 'rb') as f:
-        err_exs = json.load(f)
+    if err_ex:
+        with open('erroneous_example_augmented_taxi/' + mdp_class + '_err_ex.json', 'rb') as f:
+            err_exs = json.load(f)
 
     # initialize a particle filter model of human
     particle_positions = BEC_helpers.sample_human_models_uniform([], n_particles)
@@ -451,7 +452,6 @@ def simulate_teaching_loop(mdp_class, BEC_summary, visited_env_traj_idxs, partic
 
             if err_ex:
                 print("Here is an erroneous example for this unit")
-                erroneous_mdp_params = {'agent': {'x': 3, 'y': 1, 'has_passenger': 0}, 'walls': [{'x': 1, 'y': 3}, {'x': 1, 'y': 2}], 'passengers': [{'x': 2, 'y': 3, 'dest_x': 1, 'dest_y': 1, 'in_taxi': 0}], 'tolls': [{'x': 2, 'y': 2}, {'x': 3, 'y': 2}], 'available_tolls': [{'x': 3, 'y': 3}, {'x': 2, 'y': 2}, {'x': 3, 'y': 2}, {'x': 4, 'y': 2}, {'x': 3, 'y': 1}], 'traffic': [], 'fuel_station': [], 'hotswap_station': [], 'available_hotswap_stations': [{'x': 4, 'y': 3}], 'width': 4, 'height': 3, 'gamma': 1, 'env_code': [0, 1, 1, 0, 0, 0], 'opt_locations': [[3, 1, 0], [4, 1, 0], [4, 2, 0], [4, 3, 0], [3, 3, 0], [2, 3, 0], [2, 3, 1], [2, 2, 1], [2, 1, 1], [1, 1, 1], [1, 1, 0]], 'opt_actions': ['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'opt_traj_length': 10, 'opt_traj_reward': -2.7559944880165363, 'test_difficulty': 'none', 'tag': -3, 'all_opt_actions': [['right', 'up', 'up', 'left', 'left', 'pickup', 'down', 'down', 'left', 'dropoff']], 'normalized_opt_actions': [], 'normalized_human_actions': [], 'human_actions': ['up', 'up', 'left', 'pickup', 'down', 'down', 'left', 'dropoff'], 'env_traj_idxs': [24, 99], 'variable_filter': [[0, 1, 0]], 'constraints': [[[1, 0, -4]], [[-1, 0, 2]]]}
                 human_traj, human_history = test_mdp.visualize_erroneous_example(err_exs[str(unit_idx)], keys_map=keys_map)
                 
             else:
