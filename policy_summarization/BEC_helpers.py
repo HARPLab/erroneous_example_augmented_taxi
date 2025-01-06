@@ -3,7 +3,7 @@ import random
 import numpy as np
 # from pypoman import compute_polygon_hull, indicate_violating_constraints
 from scipy.optimize import linprog
-import sage.all
+#import sage.all
 import sage.geometry.polyhedron.base as Polyhedron
 from termcolor import colored
 import difflib
