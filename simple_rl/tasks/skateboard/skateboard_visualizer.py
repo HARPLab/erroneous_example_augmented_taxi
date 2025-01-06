@@ -238,6 +238,7 @@ def _draw_erroneous_state(screen,
     Returns:
         (pygame.Shape)
     '''
+    print("INSIDE")
     # Make value dict.
     val_text_dict = defaultdict(lambda: defaultdict(float))
     if show_value:

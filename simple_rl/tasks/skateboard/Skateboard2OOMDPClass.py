@@ -233,22 +233,22 @@ class Skateboard2OOMDP(OOMDP):
     def visualize_erroneous_example(self, erroneous_mdp_params, marked_state_importances=None, width_scr_scale=180, height_scr_scale=180, counterfactual_traj=None, interaction_callback=None, done_callback=None, keys_map=None):
         from simple_rl.utils.mdp_visualizer import visualize_erroneous_example
         from .skateboard_visualizer import _draw_erroneous_state, _draw_test_state
+        print("HERE")
 
         num_actions = len(erroneous_mdp_params['human_actions'])
 
         agent_obj = OOMDPObject(attributes=erroneous_mdp_params['agent'], name="agent")
-        pass_obj = self._make_oomdp_objs_from_list_of_dict(erroneous_mdp_params['passengers'], "passenger")
-        hotswap_obj = self._make_oomdp_objs_from_list_of_dict(erroneous_mdp_params['hotswap_station'], "hotswap_station")
-        init_state = self._create_state(agent_obj, pass_obj, hotswap_obj)
+        skateboard = OOMDPObject(attributes=erroneous_mdp_params['skateboard'], name="skateboard")
+        init_state = self._create_state(agent_obj, skateboard)
         erroneous_actions = erroneous_mdp_params['human_actions']
-        second_state = self._taxi_transition_func(init_state, erroneous_actions[0])
+        second_state = self._skateboard_transition_func(init_state, erroneous_actions[0])
 
         erroneous_trajectory = [(init_state, erroneous_actions[0], second_state)]
 
         for i in range(1, num_actions):
             prev_state = erroneous_trajectory[-1][2]
             action = erroneous_actions[i]
-            next_state = self._taxi_transition_func(prev_state, action)
+            next_state = self._skateboard_transition_func(prev_state, action)
 
             erroneous_trajectory.append((prev_state, action, next_state))
 

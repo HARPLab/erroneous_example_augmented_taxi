@@ -825,6 +825,7 @@ def visualize_interaction(mdp, draw_state, cur_state=None, interaction_callback=
                 return trajectory, agent_history
 
 def _vis_init(screen, mdp, draw_state, cur_state, agent=None, value=False, score=-1, counterfactual_traj=None, offset_direction=0, alpha=255, is_erroneous=False, is_erroneous_test = False, err_dynamic_shapes=None, err_agent_history=None, final_state=None):
+    print("2")
     # Pygame setup.
     pygame.init()
     screen.fill((255, 255, 255))
@@ -867,7 +868,7 @@ def convert_x_y_to_grid_cell(x, y, scr_width, scr_height, mdp_width, mdp_height)
     return cell_x, cell_y
 
 def visualize_erroneous_example(mdp, erroneous_trajectory, draw_state_1, draw_state_2, marked_state_importances=None, cur_state=None, scr_width=720, scr_height=720, mdp_class=None, counterfactual_traj=None, delay=0.1, interaction_callback=None, done_callback=None, keys_map=None):
-    
+    print("1")
     trajectory = erroneous_trajectory
     screen = pygame.display.set_mode((scr_width * 2 + 30, scr_height))
 
