@@ -124,9 +124,9 @@ def remove_redundant_constraints_lp(constraints, weights, step_cost_flag):
     return nonredundant_constraints, redundundant_constraints
 
 '''def remove_redundant_constraints(constraints, weights=None, step_cost_flag=False):
-    '''
-    #Summary: Remove redundant constraints
-    '''
+    
+    Summary: Remove redundant constraints
+    
     if step_cost_flag:
         # Remove redundant constraint that do not change the underlying intersection between the BEC region and the
         # L1 constraints
@@ -501,9 +501,9 @@ def calc_dihedral_supp(plane1, plane2):
     return supplement
 
 '''def calc_solid_angles(constraint_sets):
-    '''
-    #Use the spherical excess formula to calculate the area of the spherical polygon
-    '''
+    
+    Use the spherical excess formula to calculate the area of the spherical polygon
+    
     solid_angles = []
 
     for constraint_set in constraint_sets:
