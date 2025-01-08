@@ -2,8 +2,8 @@ import matplotlib
 matplotlib.use('TkAgg')
 import numpy as np
 import matplotlib.pyplot as plt
-import sage.all
-import sage.geometry.polyhedron.base as Polyhedron
+#import sage.all
+#import sage.geometry.polyhedron.base as Polyhedron
 from termcolor import colored
 from spherical_geometry import great_circle_arc as gca
 import copy

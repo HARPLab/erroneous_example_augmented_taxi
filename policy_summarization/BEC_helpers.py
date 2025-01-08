@@ -4,7 +4,7 @@ import numpy as np
 # from pypoman import compute_polygon_hull, indicate_violating_constraints
 from scipy.optimize import linprog
 #import sage.all
-import sage.geometry.polyhedron.base as Polyhedron
+#import sage.geometry.polyhedron.base as Polyhedron
 from termcolor import colored
 import difflib
 from sklearn import metrics
@@ -123,7 +123,7 @@ def remove_redundant_constraints_lp(constraints, weights, step_cost_flag):
 
     return nonredundant_constraints, redundundant_constraints
 
-def remove_redundant_constraints(constraints, weights=None, step_cost_flag=False):
+'''def remove_redundant_constraints(constraints, weights=None, step_cost_flag=False):
     '''
     Summary: Remove redundant constraints
     '''
@@ -179,7 +179,7 @@ def remove_redundant_constraints(constraints, weights=None, step_cost_flag=False
         # reshape so that each element is a valid weight vector
         nonredundant_constraints = nonredundant_constraints.reshape(nonredundant_constraints.shape[0], 1, nonredundant_constraints.shape[1])
 
-    return list(nonredundant_constraints)
+    return list(nonredundant_constraints)'''
 
 def perform_BEC_constraint_bookkeeping_flattened(BEC_constraints, min_subset_constraints_record):
     '''
@@ -500,7 +500,7 @@ def calc_dihedral_supp(plane1, plane2):
 
     return supplement
 
-def calc_solid_angles(constraint_sets):
+'''def calc_solid_angles(constraint_sets):
     '''
     Use the spherical excess formula to calculate the area of the spherical polygon
     '''
@@ -541,7 +541,7 @@ def calc_solid_angles(constraint_sets):
             # spherical excess formula / Girard's theorem
             solid_angles.append(sum(dihedral_angles) - (len(dihedral_angles) - 2) * np.pi)
 
-    return solid_angles
+    return solid_angles'''
 
 def lies_on_constraint_plane(poly, point):
     '''

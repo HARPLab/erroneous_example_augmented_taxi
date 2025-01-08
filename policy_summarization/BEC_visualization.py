@@ -5,8 +5,8 @@ import policy_summarization.computational_geometry as cg
 from scipy.spatial import geometric_slerp
 import matplotlib.tri as mtri
 from termcolor import colored
-import sage.all
-import sage.geometry.polyhedron.base as Polyhedron
+#import sage.all
+#import sage.geometry.polyhedron.base as Polyhedron
 
 def visualize_spherical_polygon(poly, fig=None, ax=None, alpha=1.0, color='y', plot_ref_sphere=True):
     '''
