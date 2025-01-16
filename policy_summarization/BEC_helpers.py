@@ -798,12 +798,13 @@ def sample_human_models_pf(particles, n_models):
     if (particles.weights == particles.weights[0]).all():
         # utilize systematic resampling to account for the different weights of different particles (e.g. favor
         # higher weighted particles for being accounted for in the k-center selection)
-        indexes = np.unique(p_utils.systematic_resample(particles.weights))
-        particle_positions_latllong = cg.cart2latlong(particles.positions[indexes].squeeze())
-    else:
-        # utilizing systematic resampling on a set of equal weights leads to all of them being sampled anyways, so you can just skip
         indexes = np.arange(len(particles.weights))
         particle_positions_latllong = cg.cart2latlong(particles.positions.squeeze())
+        
+    else:
+        # utilizing systematic resampling on a set of equal weights leads to all of them being sampled anyways, so you can just skip
+        indexes = np.unique(p_utils.systematic_resample(particles.weights))
+        particle_positions_latllong = cg.cart2latlong(particles.positions[indexes].squeeze())
 
     pairwise = metrics.pairwise.haversine_distances(particle_positions_latllong, particle_positions_latllong)
     select_idxs = selectKcities(pairwise.shape[0], pairwise, n_models)
